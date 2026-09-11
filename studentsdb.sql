@@ -1,0 +1,37 @@
+CREATE TABLE USERS (
+user_id INT AUTO_INCREMENT PRIMARY KEY ,
+username VARCHAR(20) NOT NULL UNIQUE,
+fname VARCHAR(20) NOT NULL,
+lname VARCHAR(20) NOT NULL,
+dob DATE NOT NULL,
+phone VARCHAR(20) NOT NULL,
+user_address VARCHAR(255) DEFAULT NULL,
+user_desc VARCHAR(500) DEFAULT NULL,
+pfp VARCHAR(255) DEFAULT 'default.jpeg',
+email VARCHAR(50) NOT NULL UNIQUE,
+pass VARCHAR(25) NOT NULL,
+user_role ENUM('admin','user') NOT NULL DEFAULT 'user',
+gender ENUM('male','female') NOT NULL
+);
+CREATE TABLE COURSES(
+course_id INT AUTO_INCREMENT PRIMARY KEY,
+course_name VARCHAR(20) NOT NULL UNIQUE 
+);
+CREATE TABLE GRADES(
+    grade_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    course_id INT NOT NULL,
+    grade DECIMAL(5,2) NOT NULL CHECK(grade >= 0 AND grade <= 100),
+
+    CONSTRAINT fk_users
+    FOREIGN KEY (user_id)
+    REFERENCES USERS(user_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+
+    CONSTRAINT fk_courses
+    FOREIGN KEY (course_id)
+    REFERENCES COURSES(course_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);

@@ -1,0 +1,42 @@
+database.sql: create users,courses and grades tables.
+
+images folder: static image uploads. It means images that the page developer uploads like the default profile
+picture and other images that arent constantly added or removed.
+
+db.php: database PDO configuration
+
+index.php: if the user is logged in, directs to dashboard.php. else, directs him to login.php. the session
+variables are set in login.php. header function takes the user to another page while the exit function exits the
+current page and stops the code execution.
+
+login.php: at first we start the session as we do in every page so that the browsers can know which user is logged
+in. if the user is already logged in it directs him instantly to the dashboard so the login page doesnt load.
+we include the config/db.php file so we can access the PDO object and the database.
+the username and password sent by the user in the form are accessed by $_POST and we trim them to erase extra 
+whitespaces. We access the PDO object and use the prepare method with the desired query as a parameter.
+WHERE username = :username. the left-side is the username column in our database. the right-side is a placeholder
+called username. we connect that placeholder to the real variable called $username in the next statement: execute
+then we fetch the username as an associative array because we specified in the db.php configuration file in the 
+options that the fetching should be done with associative arrays. we pass variables to sql placeholders with an 
+associative array: :username => $username (see the execute function in the login page), the key of the associative
+array should match the placeholder. the pdo->prepare returns a PDOstatement object. we store it in a variable and
+use that object to do the execute and fetch methods.
+inside the password verify function. the 1st parameter is the password given by the user inside the form
+the 2nd argument is the hashed password for that specific username. we use password_hash in another page.
+after calling session regenerate id, we throw away the old session ID and generate a new random ID for this user
+a hacker may visit login.php and he will get a session ID which is normal for any site visitor. then the hacker
+tricks a user into clicking a link that forces them to use that same session ID, so the user logs in with the 
+hacker's session ID and now the hacker can use his session ID to access the page as the logged in user.
+next we have the $_SESSION['user_id'] = $user['user_id'] and the 2 statements that come after it: on the left side
+of the equality, we are creating keys in the PHP $_SESSION superglobal array. so we can access them to check user
+info in other pages with the $_SESSION array. on the rigth side, the values come from the database we used the 
+$stmt which is a pdostatement object and its fetch method which returns an associative array with the database
+columns as keys and database values as values in the associative array. that array here is stored in the $user
+variable.
+down in the html part of the login page, we use if and endif syntax so we can write html code inside of it
+(instead of using curly braces like we normally do in if statements) syntax:<?php if(...): ?> html code...
+..<?php endif; ?>.
+
+register.php:
+
+
